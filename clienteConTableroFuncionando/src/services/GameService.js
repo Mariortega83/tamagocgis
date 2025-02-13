@@ -56,14 +56,19 @@ export class GameService {
 
     async do_newPlayer (payload) {
         console.log("ha llegado un jugador nuevo");
-        console.log(payload);
-        this.#players.push(payload);
+        console.log("Jugadores",payload);
+        this.#players = payload;
+        
+        
     };
 
     async do_newBoard(payload) {
         this.#board.build(payload);
         console.log('AQUI LLEGAN LOS JUGADORES')
         this.#ui.drawBoard(this.#board.map, this.#players);
+    
     }
+
+    
     
 }

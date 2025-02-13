@@ -7,7 +7,8 @@ export enum GameStates {
 
 export enum Messages {
     BOARD = "BOARD",
-    NEW_PLAYER = "NEW_PLAYER"
+    NEW_PLAYER = "NEW_PLAYER",
+    UPDATE_PLAYERS = "UPDATE_PLAYERS"
 }
 
 export interface Game {

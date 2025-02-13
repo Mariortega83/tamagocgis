@@ -22,10 +22,25 @@ export class GameService {
     }
 
     public buildPlayer(socket: Socket): Player {
+        const startingPositions = [
+            { x: 0, y: 0 },      // Esquina superior izquierda
+            { x: 9, y: 0 },      // Esquina superior derecha
+            { x: 0, y: 9 },      // Esquina inferior izquierda
+            { x: 9, y: 9 }       // Esquina inferior derecha
+        ];
+        const occupiedPositions = this.games.flatMap(game => game.room.players.map(p => ({ x: p.x, y: p.y })));
+
+        // Buscar la primera posición libre
+        let position = startingPositions.find(pos =>
+            !occupiedPositions.some(p => p.x === pos.x && p.y === pos.y)
+        );
+        if (!position) {
+        position = { x: Math.floor(Math.random() * 10), y: Math.floor(Math.random() * 10) };
+    }
         return {
             id: socket,
-            x: 0,
-            y: 0,
+            x: position.x,
+            y: position.y,
             state: PlayerStates.Idle,
             direction: Directions.Up,
             visibility: true
@@ -34,14 +49,26 @@ export class GameService {
 
     public addPlayer(player: Player): boolean {
         const room: Room = RoomService.getInstance().addPlayer(player);
-        //ServerService.getInstance().sendMessage(room.name,ServerService.messages.out.new_player,"new player");
-        ServerService.getInstance().sendMessage(room.name, Messages.NEW_PLAYER, {
+        ServerService.getInstance().sendMessage(room.name, ServerService.messages.out.new_player, "new player");
+        console.log("Players", room.players,room.players.length);
+        console.log("Room", room.name);
+
+        if (room.players.length == 4) {
+            console.log("sala llena");
+            ServerService.getInstance().sendMessage(room.name, Messages.NEW_PLAYER, room.players.map(player => ({
+            id: player.id.id,  // Solo el id del socket, no el objeto completo
             x: player.x,
             y: player.y,
             state: player.state,
             direction: player.direction,
             visibility: player.visibility
-        });
+        })));
+        }
+        
+        
+
+
+        
         const genRanHex = (size: Number) => [...Array(size)].map(() => Math.floor(Math.random() * 16).toString(16)).join('');
         if (room.players.length == 1) {
             const game: Game = {
@@ -60,10 +87,18 @@ export class GameService {
                 if (ServerService.getInstance().isActive()) {
                     ServerService.getInstance().sendMessage(room.name, Messages.BOARD, room.game.board);
                 }
+
+                
             }
             return true;
         }
 
         return false;
     }
+
+    
+
+    
+
+    
 }
