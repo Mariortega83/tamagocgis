@@ -1,5 +1,6 @@
 const UI = {
     drawBoard: () => { throw new TypeError('Debes cambiar este método para usarlo!') },
+    rotatePlayer: () => { throw new TypeError('Debes cambiar este método para usarlo!') },
     initUI: ()  => { throw new TypeError('Debes cambiar este método para usarlo!') },
     uiElements : {
         board : "board"

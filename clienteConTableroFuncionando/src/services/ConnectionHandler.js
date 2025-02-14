@@ -8,7 +8,7 @@ export const ConnectionHandler = {
     controller: null,
     init: (url, controller, onConnectedCallBack, onDisconnectedCallBack) => {
         ConnectionHandler.controller = controller;
-        let { socket } = ConnectionHandler; 
+        let { socket } = ConnectionHandler;
         socket = io(url);
         socket.onAny((message, payload) => {
             console.log("Esta llegando: ");
@@ -16,7 +16,7 @@ export const ConnectionHandler = {
             console.log(payload.type);
             console.log(payload.content);
 
-          });
+        });
 
         socket.on("connect", (data) => {
             socket.on("connectionStatus", (data) => {
@@ -32,6 +32,25 @@ export const ConnectionHandler = {
                 ConnectionHandler.connected = false;
                 onDisconnectedCallBack();
             });
+
+            
+            // Suponiendo que los botones de movimiento y rotación tienen los siguientes IDs
+            const moveButton = document.getElementById("mover");
+            const rotateButton = document.getElementById("rotar");
+            // Evento de movimiento
+            moveButton.addEventListener("click", () => {
+                // Enviar el evento al servidor con el movimiento deseado
+                socket.emit("movePlayer", { direction: 'up' }); // Aquí 'up' es un ejemplo, puede ser 'down', 'left', 'right'
+            });
+
+            // Evento de rotación
+            rotateButton.addEventListener("click", () => {
+                // Enviar el evento de rotación al servidor
+                socket.emit("rotatePlayer", { playerId: socket.id }); // Aquí socket.id es el ID del jugador
+                
+            });
+
+
         })
     }
 }

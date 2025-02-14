@@ -17,7 +17,7 @@ export class RoomService {
         return this.instance;
     }
 
-    private getRoom() : Room {
+    public getRoom() : Room {
         const room = this.rooms.find((item) => item.occupied == false);
         if (room == undefined) {
             const genRanHex = (size: Number) => [...Array(size)].map(() => Math.floor(Math.random() * 16).toString(16)).join('');
@@ -40,4 +40,6 @@ export class RoomService {
         if (room.players.length == RoomConfig.maxRoomPlayers) room.occupied = true;
         return room;  
     }
+
+    
 }
