@@ -16,7 +16,8 @@ export class GameService {
     #actionsList = {
         "NEW_PLAYER": this.do_newPlayer.bind(this),
         "BOARD": this.do_newBoard.bind(this),
-        "ROTATE_PLAYER": this.do_rotatePlayer.bind(this)
+        "ROTATE_PLAYER": this.do_rotatePlayer.bind(this),
+        "MOVE_PLAYER": this.do_movePlayer.bind(this),
     };
 
     constructor(ui) {
@@ -75,6 +76,13 @@ export class GameService {
         console.log("MIRA LO QUE LLEGA AL PAYLOADDDDDDDDD",payload);
         this.#ui.rotatePlayer(id, direction);
         
+    }
+
+    async do_movePlayer(payload){
+        console.log("El jugador se mueve");
+        const { id, x, y } = payload;
+        this.#ui.movePlayer(id, x, y);
+
     }
 
 

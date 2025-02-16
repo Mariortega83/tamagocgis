@@ -28,29 +28,15 @@ UIv1.drawBoard = (board, players) => {
                 const encontrar = players.find((p) => p.x === rowIndex && p.y === colIndex); // Estamos accediendo a la propiedad de un objeto dentro de un array
                 tile.classList.add("tile"); // Añadimos la clase tile al div
                 if (encontrar) { // Si hay un jugador en la posición actual
-                    const i = players.indexOf(encontrar); // Obtenemos el índice del jugador
-                    console.log(i);
-                    tile.style.backgroundImage = "url('assets/photos/images.png')"; // Establecemos el color del jugador
+                    if (encontrar.direction === "down") {
+                    tile.style.backgroundImage = "url('assets/photos/imagesup.png')"; // Establecemos el color del jugador
+                    tile.style.transform = "rotate(180deg)";
+                    } else {
+                        tile.style.backgroundImage = "url('assets/photos/imagesup.png')"
+                    }
+
                     tile.id = `player-${encontrar.id}`; // Añadimos el id player al div
                     board[rowIndex][colIndex] = ELEMENTS.player; // Establecemos la posición del jugador en el tablero
-
-                    if (i === 0) { // Si el jugador es el primero
-                        encontrar.state = 'down'; // Establecemos el estado del jugador
-                        tile.style.rotate = `${(i + 3) * 90}deg`; // Establecemos la rotación del jugador
-
-                    } else if (i === 1) {
-                        encontrar.state = 'up'; // Establecemos el estado del jugador
-                        tile.style.rotate = `${(i) * 90}deg`; // Establecemos la rotación del jugador
-
-                    } else if (i === 2) {
-                        encontrar.state = 'up'; // Establecemos el estado del jugador
-                        tile.style.rotate = `${(i + 1) * 90}deg`; // Establecemos la rotación del jugador
-
-                    } else if (i === 3) {
-                        encontrar.state = 'down'; // Establecemos el estado del jugador
-                        tile.style.rotate = `${(i - 2) * 90}deg`; // Establecemos la rotación del jugador
-
-                    }
                 }
 
                 if (element === ELEMENTS.bush) { // Si el elemento es un arbusto
@@ -82,9 +68,15 @@ UIv1.rotatePlayer = (playerId, direction) => {
         "down": "180deg",
         "left": "270deg"
     };
+    playerElement.style.transform = `rotate(${rotationAngles[direction]})`;
 
-    console.log(rotationAngles[playerId, direction]);
-    playerElement.style.rotate = rotationAngles[direction];
+}
+
+UIv1.movePlayer = (playerId, x, y) => {
+    const playerElement = document.getElementById(`player-${playerId}`);
+    if (!playerElement) return;
+
+    console.log("Jugador movido",playerId, x, y);
 }
 
 

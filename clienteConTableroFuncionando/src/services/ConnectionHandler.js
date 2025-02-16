@@ -40,12 +40,14 @@ export const ConnectionHandler = {
             // Evento de movimiento
             moveButton.addEventListener("click", () => {
                 // Enviar el evento al servidor con el movimiento deseado
-                socket.emit("movePlayer", { direction: 'up' }); // Aquí 'up' es un ejemplo, puede ser 'down', 'left', 'right'
+                event.preventDefault();
+                socket.emit("movePlayer", { playerId: socket.id, direction: 'up' }); // Aquí 'up' es un ejemplo, puede ser 'down', 'left', 'right'
             });
 
             // Evento de rotación
             rotateButton.addEventListener("click", () => {
                 // Enviar el evento de rotación al servidor
+                event.preventDefault();
                 socket.emit("rotatePlayer", { playerId: socket.id }); // Aquí socket.id es el ID del jugador
                 
             });

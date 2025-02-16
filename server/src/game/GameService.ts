@@ -62,12 +62,16 @@ export class GameService {
             !occupiedPositions.some(p => p.x === pos.x && p.y === pos.y)
         );
 
+        const directions = [Directions.Down, Directions.Up, Directions.Down, Directions.Up];
+        const direction = directions[this.games.flatMap(game => game.room.players).length];
+        
+
         return {
             id: socket,
             x: position?.x ?? 0,
             y: position?.y ?? 0,
             state: PlayerStates.Idle,
-            direction: Directions.Up,
+            direction: direction,
             visibility: true
         };
 
@@ -131,6 +135,7 @@ export class GameService {
         }
     
         const player = game.room.players.find(p => p.id.id === playerId);
+        console.log("Player y su direccion antes de cambiar", player, player?.direction);
         if (!player) {
             console.log("Jugador no encontrado en la sala");
             return;
@@ -151,17 +156,61 @@ export class GameService {
                 player.direction = Directions.Up;
                 break;
         }
-    
+        console.log("Player y su direccion despues de cambiar", player, player?.direction);
         // Enviar mensaje a la sala correcta
         ServerService.getInstance().sendMessage(
             game.room.name,
             Messages.ROTATE_PLAYER,{
                 id: player.id.id,
+                direction: player.direction}
+        );
+    }
+
+    public movePlayer(playerId: string, direction: Directions) {
+        const game = this.games.find(g => g.room.players.some(p => p.id.id === playerId));
+        
+        if (!game) {
+            console.log("No se encontró el juego del jugador", playerId);
+            return;
+        }
+    
+        const player = game.room.players.find(p => p.id.id === playerId);
+        if (!player) {
+            console.log("Jugador no encontrado en la sala");
+            return;
+        }
+    
+        // Mover jugador en la dirección especificada
+        if (player.x < 0 || player.x >= game.board.size || player.y < 0 || player.y >= game.board.size) {
+        switch (direction) {
+            case Directions.Up:
+                player.y += 1;
+                break;
+            case Directions.Right:
+                player.x += 1;
+                break;
+            case Directions.Down:
+                player.y -= 1;
+                break;
+            case Directions.Left:
+                player.x -= 1;
+                break;
+        }} else {
+            console.log("Movimiento inválido");
+        }
+    
+        // Enviar mensaje a la sala correcta
+        ServerService.getInstance().sendMessage(
+            game.room.name,
+            Messages.MOVE_PLAYER,
+            {
+                id: player.id.id,
                 x: player.x,
                 y: player.y,
                 state: player.state,
                 direction: player.direction,
-                visibility: player.visibility}
+                visibility: player.visibility
+            }
         );
     }
     

@@ -67,6 +67,11 @@ export class ServerService {
                 GameService.getInstance().rotatePlayer(playerId);
             });
 
+            socket.on("movePlayer", ({playerId, direction}) => {
+                GameService.getInstance().movePlayer(playerId, direction);
+
+            })
+
         });
     }
 
